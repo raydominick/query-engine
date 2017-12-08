@@ -61,7 +61,7 @@
 	</section>
 	<section class="card">
 		<h4 class="card-header">Explore</h4>
-		<form>
+		<form onsubmit="handleFormSubmit(event);">
 			<div class="form-group">
 				<label for="countQueryRepositoryInput">Repository</label>
 				<input type="text" class="form-control" id="countQueryRepositoryInput" placeholder="Type repository name here">
@@ -74,5 +74,46 @@
 			<div id="count"></div>
 		</form>
 	</section>
+	<script>
+		function getIssueCount(assignmentName, countType) {
+		    // Extracting the row for assignmentName
+		    const trCollection = document.getElementsByTagName('tr');
+
+		    const trArray = Array.from(trCollection);
+
+		    const row = trArray.filter(function(item) {
+		        return item.getElementsByTagName('th')[0].innerHTML === assignmentName;
+		    })[0];
+
+		    // Getting the index of countType in table
+		    const thead = document.getElementsByTagName('thead')[0];
+		    const thArray = Array.from(thead.getElementsByTagName('th'));
+
+		    const th = thArray.filter(function(item) {
+		        return item.innerText === countType;
+		    })[0];
+
+		    const index = thArray.indexOf(th);
+
+		    // Getting the innerText of index column in row
+		    const tdCollection = row.getElementsByTagName('td');
+		    const answer = tdCollection[index - 1].innerText;
+
+		    return answer;
+		}
+
+		function handleFormSubmit(event) {
+			event.preventDefault();
+
+			const repositoryName = document.getElementById('countQueryRepositoryInput').value;
+			const countType = document.getElementById('countQueryIssueType').value;
+
+			const number = getIssueCount(repositoryName, countType);
+
+			const countDiv = document.getElementById('count');
+
+			countDiv.innerHTML = `<strong>${number}</strong>`
+		}
+	</script>
 </body>
 </html>
